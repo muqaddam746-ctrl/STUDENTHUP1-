@@ -27,6 +27,7 @@ import {
   StudyMaterial,
   Transaction,
   User,
+  isSuperAdminEmail,
 } from './types';
 
 import {
@@ -71,8 +72,12 @@ export default function App() {
       try {
         const parsed = JSON.parse(saved);
         // Xavfsizlik: Super Admin maqomi faqat shovqiddin45@gmail.com uchun ruxsat etiladi
-        if (parsed.role === 'superadmin' && parsed.email !== 'shovqiddin45@gmail.com') {
+        if (parsed.role === 'superadmin' && !isSuperAdminEmail(parsed.email)) {
           parsed.role = 'student';
+        }
+        if (isSuperAdminEmail(parsed.email)) {
+          parsed.role = 'superadmin';
+          parsed.adminDepartment = 'all';
         }
         return parsed;
       } catch (e) {

@@ -31,6 +31,11 @@ function getGeminiClient(): GoogleGenAI | null {
   return aiClient;
 }
 
+// Google Site Verification Endpoint
+app.get("/google485eca0bbeb81d0e.html", (_req, res) => {
+  res.type("text/html").send("google-site-verification: google485eca0bbeb81d0e.html");
+});
+
 // Health check endpoint
 app.get("/api/health", (_req, res) => {
   res.json({

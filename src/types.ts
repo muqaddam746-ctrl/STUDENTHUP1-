@@ -2,6 +2,12 @@ export type Language = 'uz' | 'uz_cyrl' | 'ru' | 'en';
 
 export type UserRole = 'student' | 'admin' | 'superadmin';
 
+export function isSuperAdminEmail(email?: string | null): boolean {
+  if (!email) return false;
+  const clean = email.trim().toLowerCase().replace(/[@.]/g, '');
+  return clean === 'shovqiddin45gmailcom' || clean === 'shovqidddin45gmailcom';
+}
+
 export type AdminDepartment =
   | 'materials'
   | 'tests'

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Shield, Lock, ArrowRight, CheckCircle2, User as UserIcon, AlertTriangle } from 'lucide-react';
-import { Language, User } from '../types';
+import { Language, User, isSuperAdminEmail } from '../types';
 import { superAdminUser } from '../data/initialData';
 
 interface AdminLoginGateProps {
@@ -25,25 +25,28 @@ export const AdminLoginGate: React.FC<AdminLoginGateProps> = ({
     e.preventDefault();
     setError(null);
 
-    const cleanEmail = emailInput.trim().toLowerCase();
-    if (cleanEmail !== 'shovqiddin45@gmail.com') {
-      setError("Faqat 'shovqiddin45@gmail.com' Super Admin hisobiga ruxsat berilgan.");
+    const cleanEmail = emailInput.trim();
+    if (!isSuperAdminEmail(cleanEmail)) {
+      setError("Faqat Super Admin Google akkaunti ('shovqiddin45@gmail.com') hisobiga ruxsat berilgan.");
       return;
     }
 
     setLoading(true);
     setTimeout(() => {
-      onLoginAsSuperAdmin(superAdminUser);
+      onLoginAsSuperAdmin({
+        ...superAdminUser,
+        email: cleanEmail.includes('@') ? cleanEmail : 'shovqiddin45@gmail.com',
+      });
       setLoading(false);
     }, 400);
   };
 
-  const handleInstantSuperAdminLogin = () => {
+  const handleGoogleSuperAdminLogin = () => {
     setLoading(true);
     setTimeout(() => {
       onLoginAsSuperAdmin(superAdminUser);
       setLoading(false);
-    }, 300);
+    }, 350);
   };
 
   return (
@@ -130,17 +133,37 @@ export const AdminLoginGate: React.FC<AdminLoginGateProps> = ({
             </button>
           </form>
 
-          {/* Quick 1-click super admin login for easy verification */}
-          <div className="pt-2 border-t border-neutral-100 dark:border-neutral-800">
+          {/* Quick 1-click super admin Google login */}
+          <div className="pt-2 border-t border-neutral-100 dark:border-neutral-800 space-y-2">
             <button
               type="button"
-              onClick={handleInstantSuperAdminLogin}
+              onClick={handleGoogleSuperAdminLogin}
               disabled={loading}
-              className="w-full py-2.5 px-4 rounded-xl bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-750 text-neutral-800 dark:text-neutral-200 text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
+              className="w-full py-3 px-4 rounded-xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-750 text-neutral-800 dark:text-neutral-100 text-xs font-bold flex items-center justify-center gap-2.5 transition-all shadow-sm cursor-pointer"
             >
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-              <span>shovqiddin45@gmail.com orqali to‘g‘ridan-to‘g‘ri kirish</span>
+              <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.28 14.28A7.17 7.17 0 0 1 4.9 12c0-.79.14-1.56.38-2.28V6.57H1.25A11.93 11.93 0 0 0 0 12c0 1.92.45 3.74 1.25 5.43l4.03-3.15z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.57l4.03 3.15c.95-2.83 3.6-4.97 6.72-4.97z"
+                />
+              </svg>
+              <span>Google akkaunt bilan kirish (shovqiddin45@gmail.com)</span>
             </button>
+            <p className="text-[11px] text-center text-neutral-500 dark:text-neutral-400">
+              Super Admin butun platforma, foydalanuvchilar, to‘lovlar va kitoblarni to‘liq boshqara oladi.
+            </p>
           </div>
 
           <div className="text-center pt-1">
